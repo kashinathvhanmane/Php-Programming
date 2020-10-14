@@ -1,0 +1,197 @@
+<html>
+<head>
+</head>
+<body>
+<form action="operation.php" method="post">
+	rollno: <input type="text" name="rollno"></br>
+	name: <input type="text" name="username"></br>
+	password: <input type="text" name="password"><br>
+
+
+	<button type="Update" class="btn btn-default" name="btn" value="Update">Update</button>
+    <button type="Delete" class="btn btn-default" name="btn" value="Delete">Delete</button>
+    <button type="Insert" class="btn btn-default" name="btn" value="add">Insert</button>
+	<button type="submit" class="btn btn-default" name="btn" value="Search">Search</button>
+    <button type="Show" class="btn btn-default" name="btn" value="Show">Show</button>
+	
+	<div class="col-sm-3">
+</form>
+
+<?php
+
+if(isset($_POST['btn']))
+{
+  $servername = "localhost";
+  $username2 = "root";
+  $password = "";
+  $dbname = "mydatabase";
+
+
+    // Create connection
+    $conn = mysqli_connect($servername, $username2, $password, $dbname);
+    // Check connection
+	
+	
+    if (!$conn) 
+    {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+	
+	
+	
+    
+    $lbl=$_POST["btn"];
+    echo "<h1> " . $lbl . "</h1>";
+//---------------------------------------------------------------------------------------------------
+    if($lbl=="add")
+    {
+	
+            //echo "record inserted <br>";
+        if(!empty($_POST['rollno']) && isset($_POST['username'])  && isset($_POST['password']))
+        {
+
+            $rollno1=$_POST['rollno'];
+            $username1=$_POST['username'];
+            $password1=$_POST['password'];
+            
+
+
+			$sql = "INSERT INTO login(`rollno`,`stud_name`,`password`) values('$rollno1','$username1','$password1') ";
+			
+			//$sql="INSERT INTO mydata (`name`, `email`) VALUES ('$username1','$password1')";
+			
+		
+            if (mysqli_query($conn, $sql)) 
+            {
+                echo "New record created successfully";
+                //header( "Location: log.php" );
+
+            } 
+            else
+            {
+                echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+
+            } 
+        }
+        else
+        {
+            echo "  enter the information" ;
+        }
+        
+    } 
+	else if($lbl=="Update")
+	{
+		
+		if(!empty($_POST['rollno']) && isset($_POST['username']) && isset($_POST['password']))
+		{
+			$rollno=$_POST['rollno'];
+			$name=$_POST['username'];
+			$password=$_POST['password'];
+			
+			
+			$sql="update login set stud_name='$name',password='$password' where rollno='$rollno'";
+			
+			if(mysqli_query($conn,$sql))
+			{
+				echo"Update successfully.........!";
+			}
+			else
+			{
+				echo"error";
+			}
+		}
+		else
+		{
+			echo"enter data";
+		}
+			
+	}
+	else if($lbl=="Show")
+	{
+			
+			$sql="select * from login";
+			$result=mysqli_query($conn,$sql);
+			
+			if(mysqli_num_rows($result)>0)
+			{
+				while($row=mysqli_fetch_assoc($result))
+				{
+					echo"rollno:".$row["rollno"]."<br>";
+					echo"username:".$row["stud_name"]."<br>";
+					echo"Passowrd:".$row["password"]."<br>";
+				}
+			}
+			else
+			{
+				echo"table is empty";
+			}
+			
+		
+		
+	}
+	else if($lbl=="Delete")
+	{
+		if(!empty($_POST['rollno']))
+		{
+			$rollno=$_POST['rollno'];
+			
+			$sql="Delete from login where rollno='$rollno'";
+			
+			if(mysqli_query($conn,$sql))
+			{
+				echo"record deleted successfully...!";
+			}
+			else
+			{
+				echo"error";
+			}
+		}
+		else
+		{
+			echo"plz enter student id:";
+		}
+		
+			
+	
+	}
+	
+	else if($lbl=="Search")
+	{
+		if(!empty($_POST['rollno']))
+		{
+			$rollno=$_POST['rollno'];
+			
+			$sql="select * from login where rollno='$rollno'";
+			
+			$result=mysqli_query($conn,$sql);
+			
+			
+			if(mysqli_num_rows($result)>0)
+			{
+				while($row=mysqli_fetch_assoc($result))
+				{
+					echo"roll no:".$row["rollno"]."<br>";
+					echo"Student name:".$row["stud_name"]."<br>";
+					echo"Passowrd:".$row["password"]."<br>";
+				}
+			}
+			else
+			{
+				echo"table is empty:";
+			}
+		}
+		else
+		{
+			echo"plz enter data:";
+		}
+		
+	
+	}
+	
+	
+	
+	
+}
+     ?>
+</body>
+</html>
